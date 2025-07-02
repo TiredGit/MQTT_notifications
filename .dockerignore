@@ -9,3 +9,5 @@ wheels/
 *.egg-info
 
 .gitignore
+
+.idea
