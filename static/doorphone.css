@@ -1,0 +1,90 @@
+/* doorphone.css — стили только для страницы doorphone.html */
+
+/* Контейнер информации о домофоне */
+.doorphone-info {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  max-width: 600px;
+  margin: 0 auto 40px;
+  font-size: 1.1rem;
+}
+
+/* Центрируем заголовок статуса */
+.doorphone-info h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Обёртка для кнопки открытия двери */
+.door-open-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+/* Кнопка "Открыть дверь" */
+.open-door-button {
+  background-color: #3966d3;
+  color: white;
+  font-size: 1.2rem;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: background-color 0.3s, transform 0.2s;
+}
+.open-door-button:hover:enabled {
+  background-color: #4985ff;
+  transform: translateY(-2px);
+}
+.open-door-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Сообщение об ошибке */
+.doorphone-info p strong {
+  color: #3563a1;
+}
+.doorphone-info p {
+  margin-top: 20px;
+  text-align: left;
+}
+
+/* Секция "Квартиры" и "Ключи" */
+.section-title {
+  font-size: 2rem;
+  text-align: center;
+  margin: 40px 0 20px;
+}
+
+/* Сетка для квартир */
+.apartment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  max-width: 600px;
+  margin: 0 auto 40px;
+}
+
+/* Сетка для ключей */
+.key-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 15px;
+  max-width: 600px;
+  margin: 0 auto 20px;
+}
+
+/* Ячейка в сетке квартир и ключей */
+.apartment-key-cell {
+  background-color: #f7f7f7;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}

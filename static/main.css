@@ -1,0 +1,184 @@
+/* Базовые стили */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* Навигация */
+.nav-bar {
+  background-color: #1e90ff;
+  display: flex;
+  padding: 15px 30px;
+}
+.nav-item {
+  color: white;
+  text-decoration: none;
+  margin-right: 30px;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.nav-item:hover {
+  text-decoration: underline;
+}
+
+/* Контейнер контента */
+.main-content {
+  padding: 40px 30px;
+}
+
+/* Заголовок раздела */
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Список домофонов */
+.doorphone-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 60%;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.doorphone-item {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2rem;
+    padding: 0;
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    border: none;
+    transition: none;
+    text-align: center;
+}
+
+.doorphone-item:hover {
+    text-decoration: none;
+}
+
+.door-open-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+/* Позиционирование элемента + кнопки удаления */
+.doorphone-item-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 1.2rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.doorphone-item-wrapper:hover {
+    background-color: #f0f8ff;
+    transform: translateY(-2px);
+}
+
+/* Ссылка выглядит как обычный текст */
+.doorphone-item {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  color: #333;
+  font-size: 1.2rem;
+}
+.doorphone-item:hover {
+  text-decoration: underline;
+}
+
+/* Кнопка удаления (крестик) */
+.delete-button {
+    background: none;
+    border: none;
+    color: #ff3b3b;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.delete-button:hover {
+    color: #c10000;
+}
+
+/* Модальное подтверждение */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.modal p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+/* Кнопки в модальном окне */
+.confirm-button,
+.cancel-button {
+  font-size: 1rem;
+  padding: 8px 20px;
+  margin: 0 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.confirm-button {
+  background-color: #3c58e7;
+  color: white;
+}
+.cancel-button {
+  background-color: #bdc3c7;
+  color: #2c3e50;
+}
+.confirm-button:hover {
+  background-color: #5745ca;
+}
+.cancel-button:hover {
+  background-color: #95a5a6;
+}
+
+.section-title-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.refresh-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-left: 1rem;
+    transition: transform 0.3s ease;
+    user-select: none;
+}
+
+.refresh-icon:hover {
+    transform: rotate(-90deg);
+    color: #3498db;
+}
+
+

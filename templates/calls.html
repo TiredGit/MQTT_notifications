@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Текущие звонки</title>
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/calls.css">
+    <link rel="icon" href="/static/testnof.png" sizes="64x64">
+</head>
+<body>
+    <header>
+        <nav class="nav-bar">
+            <a href="/" class="nav-item">Главная</a>
+            <a href="/notifications" class="nav-item">Уведомления</a>
+            <a href="/calls" class="nav-item active">Входящие звонки</a>
+        </nav>
+    </header>
+
+    <main class="main-content calls-content">
+        <h1 class="section-title">Входящие звонки</h1>
+
+        <div class="calls-container">
+            {% for mac in calls %}
+            <div class="call-item">
+                <div class="call-info">
+                    <div class="call-time">Время звонка: {{ calls[mac].time }}</div>
+                    <div class="call-mac">MAC: {{ mac }}</div>
+                    <div class="call-location">Адрес: {{ calls[mac].location }}</div>
+                    <div class="call-apartment">Квартира: {{ calls[mac].apartment }}</div>
+                </div>
+                <form method="post" action="/calls/{{ mac }}/open-door">
+                    <button class="open-button" type="submit">Открыть дверь</button>
+                </form>
+            </div>
+            {% else %}
+            <p class="no-calls">Нет активных звонков.</p>
+            {% endfor %}
+        </div>
+    </main>
+
+<script>
+      const container = document.querySelector('.calls-container');
+
+      // Функция перерисовывает список звонков
+      function renderCalls(data) {
+            if (!data || Object.keys(data).length === 0) {
+                  container.innerHTML = '<p class="no-calls">Нет активных звонков.</p>';
+                  return;
+            }
+            container.innerHTML = Object.entries(data).map(([mac, info]) => `
+                  <div class="call-item">
+                        <div class="call-info">
+                              <div class="call-time">Время звонка: ${info.time}</div>
+                              <div class="call-mac">MAC: ${mac}</div>
+                              <div class="call-location">Адрес: ${info.location}</div>
+                              <div class="call-apartment">Квартира: ${info.apartment}</div>
+                        </div>
+                        <form method="post" action="/calls/${encodeURIComponent(mac)}/open-door">
+                              <button class="open-button" type="submit">Открыть дверь</button>
+                        </form>
+                  </div>
+            `).join('');
+      }
+
+      // Функция polling-а
+      async function pollCalls() {
+            try {
+                  const res = await fetch('/calls/data');
+                  const data = await res.json();
+                  renderCalls(data);
+            } catch (e) {
+                  console.error('Ошибка при обновлении звонков:', e);
+            }
+      }
+
+      // Запустим сразу и потом — раз в 5 секунд
+      pollCalls();
+      setInterval(pollCalls, 5000);
+</script>
+
+
+</body>
+</html>

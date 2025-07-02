@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Домофон</title>
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/doorphone.css">
+    <link rel="icon" href="/static/testnof.png" sizes="32x32">
+</head>
+<body>
+    <header>
+        <nav class="nav-bar">
+            <a href="/" class="nav-item">Главная</a>
+            <a href="/notifications" class="nav-item">Уведомления</a>
+            <a href="/calls" class="nav-item">Входящие звонки</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h1 class="section-title">Информация о домофоне</h1>
+        <div class="doorphone-info">
+            <h2 style="text-align: center">{% if door_phone.active == True %} Активен {% else %} Неактивен {% endif %}</h2>
+            <p><strong>MAC-адрес:</strong> {{ mac }} </p>
+            <p><strong>Адрес:</strong> {{ door_phone.location }} </p>
+            <form method="post" action="/doorphones/{{ mac }}/open-door">
+            <div class="door-open-wrapper">
+                <button type="submit" class="open-door-button" {% if not door_phone.active %}disabled{% endif %}>Открыть дверь</button>
+            </div>
+            </form>
+            {% if door_phone.error == True %}
+            <p><strong>Ошибка:</strong> Не приходят сообщения об работе </p>
+            {% endif %}
+        </div>
+
+        <h2 class="section-title">Квартиры</h2>
+        <div class="apartment-grid">
+            {% for apartment in door_phone.apartments %}
+            <div class="apartment-key-cell">{{ apartment }}</div>
+            {% endfor %}
+        </div>
+
+        <h2 class="section-title">Используемые ключи</h2>
+        <div class="key-grid">
+            {% for key in door_phone.allowed_keys %}
+            <div class="apartment-key-cell">{{ key }}</div>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>

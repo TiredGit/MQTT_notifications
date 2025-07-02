@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Уведомления</title>
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/notifications.css">
+    <link rel="icon" href="/static/testnof.png" sizes="64x64">
+</head>
+<body>
+    <header>
+        <nav class="nav-bar">
+            <a href="/" class="nav-item">Главная</a>
+            <a href="/notifications" class="nav-item active">Уведомления</a>
+            <a href="/calls" class="nav-item">Входящие звонки</a>
+        </nav>
+    </header>
+
+    <main class="main-content notifications-content">
+        <h1 class="section-title">Уведомления</h1>
+
+        <!-- Фильтры -->
+        <div class="filters-container">
+            <!-- Фильтр 1: Выбор домофона -->
+            <form method="get" action="/notifications" class="filters-container">
+                <input type="hidden" name="type" value="{{ selected_type }}">
+                <input type="hidden" name="time" value="{{ selected_time }}">
+
+                <div class="filter-box">
+                    <h3>Выбор домофона</h3>
+                    <select name="mac" onchange="this.form.submit()">
+                        <option value="all" {% if selected_mac == 'all' %}selected{% endif %}>Все</option>
+                        {% for mac in door_phones %}
+                            <option value="{{ mac }}" {% if mac == selected_mac %}selected{% endif %}>{{ mac }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+
+
+            <!-- Фильтр 2: Тип сообщения -->
+            <form method="get" action="/notifications" class="filters-container">
+                <input type="hidden" name="mac" value="{{ selected_mac }}">
+                <input type="hidden" name="time" value="{{ selected_time }}">
+
+                <div class="filter-box">
+                    <h3>Тип сообщения</h3>
+                    <select name="type" onchange="this.form.submit()">
+                        <option value="config" {% if selected_type == 'config' %}selected{% endif %}>Конфиги</option>
+                        <option value="message" {% if selected_type == 'message' %}selected{% endif %}>События</option>
+                        <option value="life" {% if selected_type == 'life' %}selected{% endif %}>Активность</option>
+                        <option value="management_commands" {% if selected_type == 'management_commands' %}selected{% endif %}>Команды</option>
+                    </select>
+                </div>
+            </form>
+
+            <!-- Фильтр 3: Время сообщения -->
+            <form method="get" action="/notifications" class="filters-container">
+                <input type="hidden" name="mac" value="{{ selected_mac }}">
+                <input type="hidden" name="type" value="{{ selected_type }}">
+
+                <div class="filter-box">
+                    <h3>Время сообщения</h3>
+                    <select name="time" onchange="this.form.submit()">
+                        <option value="1m" {% if selected_time == '1m' %}selected{% endif %}>Минута</option>
+                        <option value="10m" {% if selected_time == '10m' %}selected{% endif %}>10 минут</option>
+                        <option value="1h" {% if selected_time == '1h' %}selected{% endif %}>Час</option>
+                        <option value="24h" {% if selected_time == '24h' %}selected{% endif %}>24 часа</option>
+                        <option value="all" {% if selected_time == 'all' %}selected{% endif %}>Все</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <!-- Список уведомлений -->
+        <div class="notification-list">
+
+            <!-- Конфиги -->
+            {% for config in configs %}
+            <div class="notification-item">
+                <strong>Тип:</strong> {{ config.notification_type }} <br>
+                <strong>MAC:</strong> {{ config.mac }} <br>
+                <strong>Событие:</strong> {{ config.event }} <br>
+                <strong>Время:</strong> {{ config.time }} <br>
+                {% if config.new_config %}
+                    <strong>Новая конфигурация:</strong> {{ config.new_config }} <br>
+                {% endif %}
+                {% if config.old_config %}
+                    <strong>Старая конфигурация:</strong> {{ config.old_config }}
+                {% endif %}
+            </div>
+            {% else %}
+                {% if selected_type == 'config' %}
+                <div class="notification-item">Нет конфигураций</div>
+                {% endif %}
+            {% endfor %}
+
+            <!-- Сообщения -->
+            {% for message in messages %}
+            <div class="notification-item">
+                <strong>Тип:</strong> {{ message.notification_type }} <br>
+                <strong>MAC:</strong> {{ message.mac }} <br>
+                <strong>Событие:</strong> {{ message.event }} <br>
+                <strong>Время:</strong> {{ message.time }} <br>
+                {% if message.event == 'call-end' %}
+                <strong>Результат:</strong> {{ message.result }} <br>
+                {% endif %}
+                <strong>Статус:</strong> {{ message.status }} <br>
+                <strong>Состояние двери:</strong> {{ message.door_status }} <br>
+                {% if message.reason %}
+                    <strong>Причина:</strong> {{ message.reason }} <br>
+                {% endif %}
+                {% if message.key is not none and message.key != "None" %}
+                    <strong>Ключ:</strong> {{ message.key }} <br>
+                {% endif %}
+                {% if message.apartment %}
+                    <strong>Квартира:</strong> {{ message.apartment }} <br>
+                {% endif %}
+                {% if message.location %}
+                    <strong>Адрес:</strong> {{ message.location }} <br>
+                {% endif %}
+            </div>
+            {% else %}
+                {% if selected_type == 'message' %}
+                <div class="notification-item">Нет сообщений</div>
+                {% endif %}
+            {% endfor %}
+
+            <!-- Life -->
+            {% for l in life %}
+                <div class="notification-item">
+                    <strong>Тип:</strong> {{ l.notification_type }} <br>
+                    <strong>MAC:</strong> {{ l.mac }} <br>
+                    <strong>Время:</strong> {{ l.time }} <br>
+                    <strong>Статус:</strong>
+                    {% if l.status == "fail" %}
+                        <span style="color: red;">{{ l.status }}</span>
+                    {% else %}
+                        <span style="color: green;">{{ l.status }}</span>
+                    {% endif %}
+                    </div>
+            {% else %}
+                {% if selected_type == 'life' %}
+                <div class="notification-item">Нет life-сообщений</div>
+                {% endif %}
+            {% endfor %}
+
+            <!-- Commands -->
+            {% for command in commands %}
+                <div class="notification-item">
+                    <strong>Тип:</strong> {{ command.notification_type }} <br>
+                    <strong>MAC:</strong> {{ command.mac }} <br>
+                    <strong>Время:</strong> {{ command.time }} <br>
+                    <strong>Событие:</strong> {{ command.event }} <br>
+                    <strong>Статус:</strong> {{ command.status }} <br>
+                    </div>
+            {% else %}
+                {% if selected_type == 'management_commands' %}
+                <div class="notification-item">Нет команд</div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>

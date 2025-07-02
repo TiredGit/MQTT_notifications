@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Управление домофонами</title>
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="icon" href="/static/testnof.png" sizes="32x32">
+</head>
+<body>
+    <header>
+        <nav class="nav-bar">
+            <a href="/" class="nav-item">Главная</a>
+            <a href="/notifications" class="nav-item">Уведомления</a>
+            <a href="/calls" class="nav-item">Входящие звонки</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="section-title-wrapper">
+            <h1 class="section-title">Домофоны</h1>
+            <span class="refresh-icon" onclick="refreshDoorphones()" title="Обновить">🔄</span>
+        </div>
+
+        <div class="doorphone-list">
+            {% for mac, cfg in door_phones.items() %}
+            <div class="doorphone-item-wrapper">
+                <a href="/doorphones/{{ mac }}" class="doorphone-item">
+                    {{ mac }} — {{ cfg.location }}
+                    {% if cfg.active %}(Активен){% else %}(Неактивен{% if cfg.error == True %} - Ошибка{% endif %}){% endif %}
+                </a>
+                {% if not cfg.active %}
+                <button class="delete-button" onclick="openModal('{{ mac }}')">&times;</button>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Модальное окно -->
+        <div class="modal-overlay" id="deleteModal">
+            <div class="modal">
+                <p>Удалить домофон <span id="modalMac"></span>?</p>
+                <form id="deleteForm" method="post" action="/doorphones/{mac}/delete">
+                    <button type="submit" class="confirm-button">Да</button>
+                    <button type="button" class="cancel-button" onclick="closeModal()">Нет</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+<script>
+    function openModal(mac) {
+        document.getElementById('modalMac').textContent = mac;
+        document.getElementById('deleteForm').action = `/doorphones/${mac}/delete`;
+        document.getElementById('deleteModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    async function refreshDoorphones() {
+        const container = document.querySelector('.doorphone-list');
+        try {
+            const res = await fetch('/api/doorphones/data');
+            const data = await res.json();
+
+            if (!data || Object.keys(data).length === 0) {
+                container.innerHTML = '<p>Нет домофонов</p>';
+                return;
+            }
+
+            container.innerHTML = Object.entries(data).map(([mac, cfg]) => `
+                <div class="doorphone-item-wrapper">
+                    <a href="/doorphones/${mac}" class="doorphone-item">
+                        ${mac} — ${cfg.location}
+                        ${cfg.active ? '(Активен)' : `(Неактивен${cfg.error ? ' - Ошибка' : ''})`}
+                    </a>
+                    ${!cfg.active ? `<button class="delete-button" onclick="openModal('${mac}')">&times;</button>` : ''}
+                </div>
+            `).join('');
+        } catch (err) {
+            console.error('Ошибка при обновлении:', err);
+        }
+    }
+</script>
+
+
+</body>
+</html>
